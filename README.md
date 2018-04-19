@@ -1,6 +1,6 @@
 ![alt text](
 https://raw.githubusercontent.com/JosiahOne/evofinder/master/header.png "Header")
-# EVO_FINDER
+# evofinder
 
 evofinder is an evolutionary input fuzzer
 (https://en.wikipedia.org/wiki/Fuzzing) for python programs that attempts to
