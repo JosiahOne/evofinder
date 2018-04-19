@@ -1,3 +1,5 @@
+![alt text](
+https://raw.githubusercontent.com/JosiahOne/evofinder/master/header.png "Header")
 # EVO_FINDER
 
 evofinder is an evolutionary input fuzzer
