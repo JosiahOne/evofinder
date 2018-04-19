@@ -1,0 +1,144 @@
+Bruner, Davis, Hutchenson, and Sarch
+Professor Luis Zaman
+Complex Systems 425
+19 April 2018
+
+                  A Survey of the Literature on Fuzzing:
+                 In Pursuit of a Novel Fuzzing Algorithm
+
+In computer science, more specifically within software development, the 
+developer has duties to the client to produce secure code resistant to threats 
+and to the company to do so efficiently. Our project is in the development of 
+fuzzing, a type of software test reliant on randomness to find bugs which 
+humans otherwise could not. Part of this analysis will require a software 
+metric, which falls within the domain of static program analysis. SPA contrasts 
+with dynamic program analysis, and allows for the manipulation of a program 
+without having it run, based solely on the source code. Brucker and Sodan 
+indicate that SPA is an effective mechanism to use within the early stages of 
+development to report to a higher observer (a human expert or perhaps a genetic 
+algorithm itself) flagged results.
+
+The practice of fuzzing was predated by a program called “The Monkey” which 
+would input copious amounts of random data in an effort to find the boundaries 
+of the working code (Folklore). However, until the Internet exposed the ability 
+of massive security breaches, some authors such as Miller believe that quality 
+assurance was not a priority among developers. The development of fuzzing began 
+in the University of Wisconsin in the early 1990s by Barton Miller who used a 
+form of syntax testing to supplement other formal verification procedures to 
+“identify bugs and increase overall system reliability” (Miller). Syntax 
+testing is a form of black box testing which uses grammar of the expected data 
+inputs to check the system against a desired format. If we consider the space 
+of all possible inputs, then such a form of syntax testing can be understood as 
+testing how the system handles a random point, or path, in the space in order 
+to increase the systems overall robustness. One easy to see advantage of the 
+Fuzz technique is its ability to prepare a program better suited for the 
+unpredictability of consumer and exploiters usage.
+
+Part of the theory underlying the viability of syntax testing is the idea that 
+compilers can use abstract syntax trees to represent the relevant structure of 
+a program’s source code. These ASTs allow a programmer to track how software 
+evolves over time, thus allowing many forms of dynamical programming. One 
+approach is given in Neamtiu, Foster and Hicks who demonstrate efficiencies 
+using AST matching (for programs in C) by finding a bijection between the old 
+and new maps after a change in the source code, then traversing each’s AST in 
+parallel. Another concept which fosters the fuzzing project is program 
+instrumentation. In response to the problem that one cannot exhaust all the 
+errors in a program simply by plugging in input data, one may hope to get more 
+information to find out additional information about the program, perhaps to 
+lead further attacks in the future. Our instruments are the insertion of a key 
+set of additional statements to “obtain the values of the program attributes 
+automatically…provid[ing] us additional information for error detection” 
+(Huang). Such a technique can be applied to data flow analysis found within the 
+fuzzing operation.
+
+The goal of fuzzing is always to minimize insecurities by finding bugs, so mere 
+random inputs from the initial Monkey approach may run prohibitively long or 
+generate too many trivially invalid strings. Thus it can be advantageous to 
+introduce types of complexity into fuzzing. At one extreme, random 
+template-based fuzzers are static, acting merely with request-response 
+protocols. At another end, dynamical programming may be introduced. Block-based 
+fuzzers or evolution-based fuzzers become more suited among heritability 
+conditions for repeated attempts while learning the structure of the code: the 
+blocks of code remain syntactically valid, but their content changes. An 
+example of block-based implementation was SPIKE. Moreover, some fuzzing 
+methods, such as PROTOS, may introduce a model of the program to be attacked in 
+order to simulate what may be likely problematic input (Takanen). With the 
+skills and way of thinking we have learned in Evolution in Silica, our group 
+found it to be fruitful to explore the genetic, evolutionary approach to 
+fuzzing.
+
+The model-simulation approach, though rewarding, requires heavy input of a 
+simulation of the program to be fuzzed and may well be unable to test 
+unimplemented code. Researchers such as Ormandy sought to develop fuzzing 
+technique which proved as effective as model-simulation without the burdensome 
+heavy initial input, and thus have been led to using feedback driven response. 
+Their design of “corpus distillation” removed the need for a syntactical 
+grammar of inputs by an algorithmic ability to observe the program to be fuzzed 
+and approximating the entirety of the code by small sub-lines of code. 
+Moreover, they used a technique of “sub-instruction profiling” in replacement 
+of the block-based format to attack seemingly unproblematic code patterns which 
+might rely on suspect logic. Together, these two novelties allowed an efficient 
+chunking of data and complex logic into easily fuzzable parts, hackable by 
+mutation (Ormandy).
+
+One popular current implementation of a fuzzer is the afl-fuzz, American Fuzzy 
+Lop. Per their website, this fuzzer uses “compile-type instrumentation and 
+genetic algorithms to automatically discover clean, interesting test cases that 
+trigger new internal states in the targeted binary.” It works by generating 
+efficient test cases, trimming them to the smallest size without loss of 
+programmed behavior, and applying known fuzzing tactics. AFL-fuzz has found 
+bugs very effectively from very public cases, such as Mozilla Firefox, Adobe 
+Flash, bash, Oracle, Android, and iOS. AFL-fuzz has done its bug-finding 
+without searching particular locations within a program to attempt to crash. 
+Finding bugs is only half the battle. To efficiently fuzz, one must be able to 
+repair automatically bugs which have been found. Manual labor has proven 
+costly, so some have found that genetic programming within a fuzzing algorithm 
+can work, if the repairs pass a fuzzer test which discovered it. Such an 
+implementation developed to cost-effectively scale to repair large systems is 
+GenProg. Its algorithmic novelty is to represent bugs found in fuzzing by 
+“patches” rather than a part in an “abstract syntax tree,” and to “exploit 
+search-space parallelism” to reduce the necessary amounts of points to check. 
+Patches are a given sequence of editing operations, to be done while in a local 
+designated problem area found during the algorithms processing. The elements of 
+genetic programming are found in a) mutation, when flagged code to be edited 
+either is deleted, has data inserted, or is swapped with other code; and b) 
+being governed by a fitness function, which evaluates a candidate patch as 
+effective if it can pass a series of weighted tests.
+
+These implementations have set the stage for our project which seeks to find 
+its niche in the growing fuzz ecology accordingly. It is well-known from the 
+motivations of optimization that the ability to be exhaustive trades off with 
+both time and resources. To this end, having a fuzzer which could (somewhat) 
+reliably find bugs within particular sections of code could save resources 
+tremendously. 
+
+                                Works Cited:
+
+Brucker, Achim D., and Sodan Uwe. Deploying Static Application Security Testing 
+on a Large Scale. SAP.com. N.d. 
+https://www.brucker.ch/bibliography/download/2014/brucker.ea-sast-expierences-20
+14.pdf
+Folklore.org. Monkey Lives. 1983. 
+www.folklore.org/StoryView.py?story=Monkey_Lives.txt 
+Huang, J.C. Program Instrumentation and software testing. University of 
+Houston. N.d. https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1646909
+Icamtuf’s website. http://lcamtuf.coredump.cx/afl/ 
+http://lcamtuf.coredump.cx/afl/technical_details.txt
+Le Goeus, Claire, Dewey-Vogt, Michael, Forrest, Stephanie, and Weimer, Westley. 
+A systematic study of Automated Program repair: Fixing 55 out of 105 Bugs for 
+$8 each.” University of Virginia and University of New Mexico. 
+https://web.eecs.umich.edu/~weimerw/p/weimer-icse2012-genprog-preprint.pdf
+Miller, B.P, Fredriksen, L., and So, B. “An empirical study oft he reliability 
+of Unix utilities.” Communications of the Association for Computing Machinery, 
+33(12)(1990):32–44. 
+Neamtiu, Iulian, Foster, Jeffrey S., and Hicks, Michael. Understanding Source 
+Code Evolution Using Abstract Syntax Tree Matching.” 2008. Department of CS, 
+University of Maryland at College Park.  
+http://delivery.acm.org/10.1145/1090000/1083143/p1-neamtiu.pdf?ip=35.2.207.82&id
+=1083143&acc=ACTIVE%20SERVICE&key=93447E3B54F7D979%2E0A17827594E6F2C8%2E4D4702B0
+C3E38B35%2E4D4702B0C3E38B35&__acm__=1523942764_d270a9c2a301e4fc3a186cb4984bf3e9
+Ormandy, Tavis. Making Software Dumber. Google. N.d. 
+http://taviso.decsystem.org/making_software_dumber.pdf
+Takanen, Ari, DeMott, Jared, and Miller, Charlie. Fuzzing for Software Security 
+Testing and Quality Assurance, ISBN 978-1-59693-214-2
+
