@@ -56,9 +56,9 @@ def instrument_node(node, depth_id, target_line):
   #print(astor.dump(node))
 
   if hasattr(node, 'body'):
-    instrument_given_attr(node, 'body', depth_id, target_line)
+    instrument_given_attr(node, 'body', depth_id + "_" + '0', target_line)
   if hasattr(node, 'orelse'):
-    instrument_given_attr(node, 'orelse', depth_id, target_line)
+    instrument_given_attr(node, 'orelse', depth_id + "_" + '1', target_line)
 
 
 # Reads python program from input, converts to AST, and adds instrumentation.
