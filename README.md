@@ -1,3 +1,5 @@
+![alt text](
+https://raw.githubusercontent.com/JosiahOne/evofinder/master/header.png "Header")
 # EVO_FINDER
 
 evofinder is an evolutionary input fuzzer
@@ -5,6 +7,8 @@ evofinder is an evolutionary input fuzzer
 automatically generate inputs to cause the program to reach a pre-specified
 target location in the control flow graph
 (https://en.wikipedia.org/wiki/Control_flow_graph).
+
+Note: This project was created while at the University of Michigan as a final project for a complex systems course. It is still in active development.
 
 ## Motivation & Background
 
@@ -82,11 +86,12 @@ high-level evo-finder could be described as:
 "afl-fuzz, but for python, and where the goal is to get to a specific location,
 not get to as many locations as possible"
 
-## Project Milestones
+## Approach
 
-1. Create program that, given a fitness function f and example input i, generates a final new input a that maximizes fitness.
-2. Write a fitness function that encourages code execution to reach a pre-specified location in the control flow graph. 
-3. 
+1. Instrument the program.
+2. Create a population of inputs.
+3. Run each input and evaluate its fitness (how close it got to the target).
+4. Evolve & mutate population
 
 ## Presentations
 * https://docs.google.com/presentation/d/1aMfXO5Xk7eZcNa6JO5KRX-DYwEcKMtrpEPZvvOZ3FbA/
