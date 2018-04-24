@@ -16,7 +16,7 @@ import string
 import sys
 import math
 
-POPULATION_SIZE = 10
+POPULATION_SIZE = 50
 INITIAL_STRING_MAX_SIZE = 50 
 EVOLUTION_GENERATIONS = 10
 input_dictionary = {}
@@ -345,7 +345,9 @@ def main():
   if instrument_ast == None:
     print("Instrumentation Failed.")
     exit(2)
-
+  elif target_location_id == None:
+    print("Couldn't find target line number. Aborting....")
+    exit(3)
    
   result = start_evolution(instrument_ast, target_line_num, example_files)
 
