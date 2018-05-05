@@ -5,8 +5,6 @@
 #                      Callum Hutchinson <callumhutchinson@googlemail.com>
 #
 #             Usage: python3 evofinder.py <input python file> <target_line_num>
-#                                       | watch-me <input python file>
-#                                         <arg 1> <y/n> <arg 2> <y/n> ...
 import ast
 import astor
 import os
