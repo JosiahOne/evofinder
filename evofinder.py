@@ -5,6 +5,43 @@
 #                      Callum Hutchinson <callumhutchinson@googlemail.com>
 #
 #             Usage: python3 evofinder.py <input python file> <target_line_num>
+#                                         <fuzz-descript-str> <arg1>,
+#                                         <arg1_example_file>, <arg2>, ...
+#
+# 
+# fuzz-descript-str tells evofinder what to fuzz, and how to fuzz it
+# It should a string of length n + 1, where n is the number of arguments passed
+# to the input python script.
+#
+# Each character in the string can be one of the following:
+#   0 - Don't Fuzz
+#   1 - Fuzz Directly
+#   2 - Fuzz underlying file
+#
+# The first character in the string always represents whether you want to fuzz
+# stdin. Only options 0 or 1 are allowed here.
+#
+# After each argument (<argN> above), you can also specify a path to a file
+# which provides an example of how the data should look. This will seed the
+# intitial population for that argument. You can pass "random" to indicate no
+# example will be used.
+#
+# Example:
+#   To fuzz a program which takes 2 arguments, the latter of which is a file,
+#   where you want to fuzz only stdin and the file, your <fuzz_descript_str>
+#   would look something like:
+#     102
+#     | \ \
+#     |  \   \
+#     |    \    \ 
+#     |      \     \
+#     |        \      \
+#     |          \       \
+#     |            \        \
+#    Fuzz Stdin  Don't Fuzz  Fuzz the file underlying this arg.
+#
+
+
 import ast
 import astor
 import os
