@@ -321,7 +321,9 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
     input_data = mutate_population(input_data)
 
   print("Best fitness value was: " + str(best_fitness))
+  print("Optimal fitness value is: " + str(optimal_fitness))
   return best_input
+
 
 
 def get_pop_fitnesses(input_data, ast, target_line):
@@ -361,10 +363,12 @@ def main():
   out_file.write(result)
 
   if len(execeptional_inputs) > 0:
-    print("Found crashing input(s):")
+    print('\n')
+    print('\x1b[6;30;41m' + 'Found crashing input(s):' + '\x1b[0m')
     for key, val in execeptional_inputs.items():
       print("Input: " + key)
 
+  print("\n")
   print("Exiting...")
 
 main()
