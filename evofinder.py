@@ -263,7 +263,6 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
   global POPULATION_SIZE
   global INITIAL_STRING_MAX_SIZE
   global EVOLUTION_GENERATIONS
-  global target_location_id
 
   input_data = []
   best_input = ""
