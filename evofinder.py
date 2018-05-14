@@ -162,7 +162,6 @@ def get_fitness(input_data, ast, target_id):
   visited_locations = collect_location_ids(result)
   #print(visited_locations)
   closest_id_tuple = find_closest_id(visited_locations, target_location_id) # Returns (id, dist)
-  
   cleanup(["instrumented_program.py", "inter_input_for_program.bin"])
   #print(closest_id_tuple[1])
   return closest_id_tuple[1] 
@@ -268,6 +267,7 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
   input_data = []
   best_input = ""
   best_fitness = 0
+  optimal_fitness = len(target_location_id.split("_"))
 
   # go through each file in the list
   for files in baseline_file_list:
@@ -299,11 +299,18 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
 
 
   for i in range(EVOLUTION_GENERATIONS):
-    population_fitnesses = get_pop_fitnesses(input_data, ast, target_line)
+    population_fitnesses = get_pop_fitnesses(input_data, ast, target_line) 
 
     # Check to see if we have a new best individual
     for i, fitness in enumerate(population_fitnesses):
-      if fitness > best_fitness:
+      #exit early if optimal fitness found
+      if fitness == optimal_fitness:
+        print('\x1b[6;30;42m' + 'Target line executed - quitting evolution...' + '\x1b[0m')
+        print('\n')
+        best_input = input_data[i]    
+        best_fitness = fitness
+        return best_input
+      elif fitness > best_fitness:
         best_input = input_data[i]    
         best_fitness = fitness
 
@@ -314,7 +321,9 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
     input_data = mutate_population(input_data)
 
   print("Best fitness value was: " + str(best_fitness))
+  print("Optimal fitness value is: " + str(optimal_fitness))
   return best_input
+
 
 
 def get_pop_fitnesses(input_data, ast, target_line):
@@ -354,10 +363,12 @@ def main():
   out_file.write(result)
 
   if len(execeptional_inputs) > 0:
-    print("Found crashing input(s):")
+    print('\n')
+    print('\x1b[6;30;41m' + 'Found crashing input(s):' + '\x1b[0m')
     for key, val in execeptional_inputs.items():
       print("Input: " + key)
 
+  print("\n")
   print("Exiting...")
 
 main()
