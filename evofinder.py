@@ -305,7 +305,8 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
     for i, fitness in enumerate(population_fitnesses):
       #exit early if optimal fitness found
       if fitness == optimal_fitness:
-        print("Target line executed - quitting evolution...")
+        print('\x1b[6;30;42m' + 'Target line executed - quitting evolution...' + '\x1b[0m')
+        print('\n')
         best_input = input_data[i]    
         best_fitness = fitness
         return best_input
