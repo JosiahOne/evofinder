@@ -309,7 +309,7 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
         best_input = input_data[i]    
         best_fitness = fitness
         return best_input
-      if fitness > best_fitness:
+      elif fitness > best_fitness:
         best_input = input_data[i]    
         best_fitness = fitness
 
