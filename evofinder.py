@@ -162,7 +162,6 @@ def get_fitness(input_data, ast, target_id):
   visited_locations = collect_location_ids(result)
   #print(visited_locations)
   closest_id_tuple = find_closest_id(visited_locations, target_location_id) # Returns (id, dist)
-  
   cleanup(["instrumented_program.py", "inter_input_for_program.bin"])
   #print(closest_id_tuple[1])
   return closest_id_tuple[1] 
@@ -264,10 +263,12 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
   global POPULATION_SIZE
   global INITIAL_STRING_MAX_SIZE
   global EVOLUTION_GENERATIONS
+  global target_location_id
 
   input_data = []
   best_input = ""
   best_fitness = 0
+  optimal_fitness = len(target_location_id.split("_"))
 
   # go through each file in the list
   for files in baseline_file_list:
@@ -299,10 +300,16 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
 
 
   for i in range(EVOLUTION_GENERATIONS):
-    population_fitnesses = get_pop_fitnesses(input_data, ast, target_line)
+    population_fitnesses = get_pop_fitnesses(input_data, ast, target_line) 
 
     # Check to see if we have a new best individual
     for i, fitness in enumerate(population_fitnesses):
+      #exit early if optimal fitness found
+      if fitness == optimal_fitness:
+        print("Target line executed - quitting evolution...")
+        best_input = input_data[i]    
+        best_fitness = fitness
+        return best_input
       if fitness > best_fitness:
         best_input = input_data[i]    
         best_fitness = fitness
