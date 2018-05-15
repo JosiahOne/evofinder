@@ -15,7 +15,7 @@ import sys
 import math
 
 POPULATION_SIZE = 50
-INITIAL_STRING_MAX_SIZE = 50 
+INITIAL_STRING_MAX_SIZE = 50
 EVOLUTION_GENERATIONS = 10
 input_dictionary = {}
 target_location_id = None
@@ -35,10 +35,10 @@ def instrument_given_attr(node, attr, depth_id, target_line):
       # Add print node
       print_node = ast.Expr(value=ast.Call(func=ast.Name(id='print', ctx=ast.Load()),
            args=[
-                  ast.Str("___UNIQUE_ID___: " + str(depth_id) + "_" + str(i)) 
+                  ast.Str("___UNIQUE_ID___: " + str(depth_id) + "_" + str(i))
                ],
            keywords=[
-            
+
             ],
       ))
       to_add.append((i, print_node))
@@ -62,13 +62,13 @@ def instrument_node(node, depth_id, target_line):
 # Reads python program from input, converts to AST, and adds instrumentation.
 # Returns: AST with instrumentation
 def instrument_file(input_loc, target_line):
-  tree = None  
+  tree = None
   tree = ast.parse(open(input_loc, 'r').read())
   instrument_node(tree, "", target_line)
 
   new_source = astor.to_source(tree)
   print(new_source)
-  return tree 
+  return tree
 
 
 # Helper functions
@@ -111,15 +111,17 @@ def collect_location_ids(exe_output_string):
 # _A_B_C_D... where each of A,B,C,D... represents the position of the child
 # taken at each level. So a string with 4 values would have a depth of 4, etc.
 #
-# "Closeness" is defined as how many values match until they no longer do  
+# "Closeness" is defined as how many values match until they no longer do
 def find_closest_id(ids, target_id):
   target_vals = target_id.split("_")
+  target_vals = target_vals[1:len(target_vals)]
   #print("Target: " + str(target_vals))
   best_score = -1
   best_id = None
 
   for val in ids:
     vals = val.split("_")
+    vals = vals[1:len(vals)]
     #print("Val: " + str(vals))
     score = 0
     for i, idx in enumerate(vals):
@@ -140,7 +142,7 @@ def cleanup(files): # files should be an array of strings
     try:
         os.remove(a_file)
     except OSError:
-        pass    
+        pass
 
 
 # Evalutes the fitness of some input_data string. To do this:
@@ -157,14 +159,14 @@ def get_fitness(input_data, ast, target_id):
   global target_location_id
   write_ast(ast, "instrumented_program.py")
   write_input(input_data, "inter_input_for_program.bin")
-  result = exe_and_capture("instrumented_program.py", 
+  result = exe_and_capture("instrumented_program.py",
                            "inter_input_for_program.bin", input_data)
   visited_locations = collect_location_ids(result)
   #print(visited_locations)
   closest_id_tuple = find_closest_id(visited_locations, target_location_id) # Returns (id, dist)
   cleanup(["instrumented_program.py", "inter_input_for_program.bin"])
   #print(closest_id_tuple[1])
-  return closest_id_tuple[1] 
+  return closest_id_tuple[1]
 
 def mutate_ind(input_data, mutate_percentage=0):
   #store the mutated inputs
@@ -176,11 +178,11 @@ def mutate_ind(input_data, mutate_percentage=0):
   #print("Input data: " + input_data)
   input_list = list(input_data)
   #print(input_data)
-  # choose which operation to apply. dont delete if 
+  # choose which operation to apply. dont delete if
   # string is empty or length 1
   while(True):
     operation_choice = random.choice(operations)
-    if(not((len(input_list)==0 or len(input_list)==1) 
+    if(not((len(input_list)==0 or len(input_list)==1)
       and operation_choice=='delete' or operation_choice=='swap')):
       break
 
@@ -191,7 +193,7 @@ def mutate_ind(input_data, mutate_percentage=0):
   else:
     num_iter = int(math.ceil(len(input_list)*mutate_percentage))
 
-  #apply the operation the given amount of times  
+  #apply the operation the given amount of times
   for iter in range(num_iter):
 
     if operation_choice=='insert':
@@ -267,7 +269,7 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
   input_data = []
   best_input = ""
   best_fitness = 0
-  optimal_fitness = len(target_location_id.split("_"))
+  optimal_fitness = len(target_location_id.split("_")) - 1
 
   # go through each file in the list
   for files in baseline_file_list:
@@ -276,7 +278,7 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
     except:
       print("File load error")
       break
-    
+
     # add the baseline inputs to the input data
     if len(input_data)<POPULATION_SIZE:
       print("Added file contents: " + str(files))
@@ -286,7 +288,7 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
 
     file.close()
     # dont open the other files if our population is
-    # already full 
+    # already full
     if(len(input_data)==POPULATION_SIZE):
       break
 
@@ -299,19 +301,18 @@ def start_evolution(ast, target_line, baseline_file_list=[]):
 
 
   for i in range(EVOLUTION_GENERATIONS):
-    population_fitnesses = get_pop_fitnesses(input_data, ast, target_line) 
+    population_fitnesses = get_pop_fitnesses(input_data, ast, target_line)
 
     # Check to see if we have a new best individual
     for i, fitness in enumerate(population_fitnesses):
       #exit early if optimal fitness found
       if fitness == optimal_fitness:
-        print('\x1b[6;30;42m' + 'Target line executed - quitting evolution...' + '\x1b[0m')
-        print('\n')
-        best_input = input_data[i]    
+        print('\x1b[6;30;42m' + 'Target line executed - quitting evolution...' + '\x1b[0m' + '\n')
+        best_input = input_data[i]
         best_fitness = fitness
         return best_input
       elif fitness > best_fitness:
-        best_input = input_data[i]    
+        best_input = input_data[i]
         best_fitness = fitness
 
     # Get new population using tournament selection
@@ -355,7 +356,7 @@ def main():
   elif target_location_id == None:
     print("Couldn't find target line number. Aborting....")
     exit(3)
-   
+
   result = start_evolution(instrument_ast, target_line_num, example_files)
 
   print("Best result dumped to evolved_input.bin")
@@ -363,12 +364,10 @@ def main():
   out_file.write(result)
 
   if len(execeptional_inputs) > 0:
-    print('\n')
-    print('\x1b[6;30;41m' + 'Found crashing input(s):' + '\x1b[0m')
+    print('\n' + '\x1b[6;30;41m' + 'Found crashing input(s):' + '\x1b[0m')
     for key, val in execeptional_inputs.items():
       print("Input: " + key)
 
-  print("\n")
-  print("Exiting...")
+  print('\n' + 'Exiting...')
 
 main()
