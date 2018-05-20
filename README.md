@@ -2,6 +2,8 @@
 https://raw.githubusercontent.com/JosiahOne/evofinder/master/header.png "Header")
 # evofinder
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3ee8fb601041413d9d6bbdc287b86b38)](https://app.codacy.com/app/josiah/evofinder?utm_source=github.com&utm_medium=referral&utm_content=JosiahOne/evofinder&utm_campaign=badger)
+
 evofinder is an evolutionary input fuzzer
 (https://en.wikipedia.org/wiki/Fuzzing) for python programs that attempts to
 automatically generate inputs to cause the program to reach a pre-specified
